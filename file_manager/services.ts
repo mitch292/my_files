@@ -5,13 +5,18 @@ import { extname } from "../deps.ts";
 function getFileFromRequestBody(body: any): File {
   return {
     short_name: body.file_name,
-    name: body.file_name, // TODO: pull the last part of the path
+    name: getFileNameWithType(body.file_path),
     fileType: getContentType(body.file_path),
     origin_location: body.file_path,
     destination_dir: STORAGE_PATH,
     createdAt: Date.now(),
     updatedAt: Date.now(),
   };
+}
+
+function getFileNameWithType(filePath: string): string {
+  const pieces = filePath.split("/");
+  return pieces[pieces.length - 1];
 }
 
 function getContentType(filePath: string): string {
@@ -33,4 +38,4 @@ function getGoodResponseBody(message: string, body: any): FileResponseObject {
   };
 }
 
-export { getBadResponseBody, getGoodResponseBody, getFileFromRequestBody };
+export { getGoodResponseBody, getBadResponseBody, getFileFromRequestBody };
