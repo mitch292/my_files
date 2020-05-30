@@ -1,5 +1,10 @@
-import { getBadResponseBody, getGoodResponseBody } from "./services.ts";
+import {
+  getBadResponseBody,
+  getGoodResponseBody,
+  getFileFromRequestBody,
+} from "./services.ts";
 import { STORAGE_PATH } from "./settings.ts";
+import { File } from "./models.ts";
 
 function getFile() {
 }
@@ -13,14 +18,23 @@ async function addFile(
     return;
   }
 
-  const { filePath } = await request.arrayBuffer();
+  const { value : body } = await request.body();
 
-  const file = await Deno.readFile(filePath);
+  const file: File = getFileFromRequestBody(body);
 
-  await Deno.writeFile(STORAGE_PATH, file);
+  const fileBuffer: Uint8Array = await Deno.readFile(file.origin_location);
+
+  try {
+    await Deno.writeFile(STORAGE_PATH, fileBuffer);
+  } catch (e) {
+    response.status = 400;
+    response.body = getBadResponseBody(e.message);
+    return;
+  }
 
   response.status = 200;
   response.body = getGoodResponseBody("ok", {});
+  return;
 }
 
 function updateFile() {
