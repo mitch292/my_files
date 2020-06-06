@@ -7,6 +7,7 @@ import { getFile, addFile, updateFile, deleteFile } from "./controllers.ts";
 
 const filesRouter = new Router();
 
+// Register middleware
 filesRouter.use(handleEmptyRequestBody);
 filesRouter.use(ensureDestinationDirExists);
 
