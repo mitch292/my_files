@@ -1,4 +1,5 @@
-const MEDIA_TYPES: Record<string, string> = {
+/** mime type mapping based on file extension */
+const MIME_TYPES: Record<string, string> = {
   ".md": "text/markdown",
   ".html": "text/html",
   ".htm": "text/html",
@@ -12,8 +13,19 @@ const MEDIA_TYPES: Record<string, string> = {
   ".gz": "application/gzip",
   ".css": "text/css",
   ".wasm": "application/wasm",
+  ".jpeg": "image/jpeg",
+  ".jpg": "image/jpeg",
+  ".png": "image/png",
+  ".svg": "image/svg+xml",
+  ".gif": "image/gif",
+  ".ico": "image/x-icon",
+  "default": "application/octet-stream"
 };
 
+/** 
+ * The path of where to store our files
+ * TODO: this should come from a .env value
+*/
 const STORAGE_PATH = "/Users/andrewmitchell/Documents/test_folder/";
 
-export { MEDIA_TYPES, STORAGE_PATH };
+export { MIME_TYPES, STORAGE_PATH };

@@ -3,12 +3,17 @@ import {
   getFileFromRequestBody,
 } from "./services.ts";
 import { STORAGE_PATH } from "./settings.ts";
-import { File } from "./models.ts";
+import { MyFile } from "./models.ts";
 
+
+/**
+ * GET /file
+ * Fetch a file from storage and provide to the client for download
+ */
 async function getFile(ctx: any): Promise<any> {
   const { value : body } = await ctx.request.body();
 
-  const file: File = getFileFromRequestBody(body);
+  const file: MyFile = getFileFromRequestBody(body);
 
   ctx.response.headers.set(
     "Content-disposition",
@@ -21,10 +26,14 @@ async function getFile(ctx: any): Promise<any> {
   return;
 }
 
+/**
+ * POST /file
+ * Add a file to our storage
+ */
 async function addFile(ctx: any): Promise<any> {
   const { value : body } = await ctx.request.body();
 
-  const file: File = getFileFromRequestBody(body);
+  const file: MyFile = getFileFromRequestBody(body);
   const fileBuffer: Uint8Array = await Deno.readFile(file.originLocation);
 
   await Deno.writeFile(STORAGE_PATH + file.name, fileBuffer);
@@ -35,10 +44,14 @@ async function addFile(ctx: any): Promise<any> {
   return;
 }
 
+/**
+ * DELETE /file
+ * Remove a file from storage
+ */
 async function deleteFile(ctx: any): Promise<any> {
   const { value : body } = await ctx.request.body();
 
-  const file: File = getFileFromRequestBody(body);
+  const file: MyFile = getFileFromRequestBody(body);
 
   await Deno.remove(STORAGE_PATH + file.name);
 

@@ -1,8 +1,9 @@
-import { MEDIA_TYPES, STORAGE_PATH } from "./settings.ts";
-import { FileResponseObject, File } from "./models.ts";
+import { MIME_TYPES, STORAGE_PATH } from "./settings.ts";
+import { MyFileResponseObjectBody, MyFile } from "./models.ts";
 import { extname } from "../deps.ts";
 
-function getFileFromRequestBody(body: any): File {
+/** Convert a request body into our internal MyFile type */
+function getFileFromRequestBody(body: any): MyFile {
   return {
     name: getFileNameWithType(body.file_path),
     type: getContentType(body.file_path),
@@ -11,23 +12,37 @@ function getFileFromRequestBody(body: any): File {
   };
 }
 
+/** 
+ * Get the file name from a file path
+ * 
+ * Input: `/Users/deno/foo/bar.txt`
+ * Output: `bar.txt`
+ */
 function getFileNameWithType(filePath: string): string {
   const pieces = filePath.split("/");
   return pieces[pieces.length - 1];
 }
 
+/**
+ * Determine the content type of a file
+ * 
+ * Input: `/Users/deno/foo/bar.txt`
+ * Output: `text/plain`
+ */
 function getContentType(filePath: string): string {
-  return MEDIA_TYPES[extname(filePath)] || "unknown";
+  return MIME_TYPES[extname(filePath)] || MIME_TYPES["default"];
 }
 
-function getBadResponseBody(message?: string): FileResponseObject {
+/** Get a MyFileResponseObjectBody for an error */
+function getBadResponseBody(message?: string): MyFileResponseObjectBody {
   return {
     success: false,
     msg: message,
   };
 }
 
-function getGoodResponseBody(message: string, body: any): FileResponseObject {
+/** Get a MyFileResponseObjectBody for a 200 level response */
+function getGoodResponseBody(message: string, body: any): MyFileResponseObjectBody {
   return {
     success: true,
     msg: message,
