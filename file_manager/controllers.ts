@@ -12,12 +12,6 @@ function getFile() {
 async function addFile(
   { request, response }: { request: any; response: any },
 ) {
-  if (!request.hasBody) {
-    response.status = 400;
-    response.body = getBadResponseBody("No file");
-    return;
-  }
-
   const { value : body } = await request.body();
 
   const file: File = getFileFromRequestBody(body);
@@ -43,12 +37,6 @@ function updateFile() {
 async function deleteFile(
   { request, response }: { request: any; response: any },
 ) {
-  if (!request.hasBody) {
-    response.status = 400;
-    response.body = getBadResponseBody("No file");
-    return;
-  }
-
   const { value : body } = await request.body();
 
   const file: File = getFileFromRequestBody(body);
