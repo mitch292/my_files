@@ -38,4 +38,4 @@ function getGoodResponseBody(message: string, body: any): FileResponseObject {
   };
 }
 
-export { getGoodResponseBody, getBadResponseBody, getFileFromRequestBody };
+export { getGoodResponseBody, getBadResponseBody, getFileFromRequestBody, getContentType };

@@ -2,11 +2,32 @@ import {
   getBadResponseBody,
   getGoodResponseBody,
   getFileFromRequestBody,
+  getContentType,
 } from "./services.ts";
 import { STORAGE_PATH } from "./settings.ts";
 import { File } from "./models.ts";
 
-function getFile() {
+async function getFile(
+  { request, response }: { request: any; response: any },
+) {
+  const { value : body } = await request.body();
+
+  let localFile = null;
+  try {
+    localFile = await Deno.readFile(body.file_path);
+  } catch (e) {
+    response.status = 400;
+    response.body = getBadResponseBody(e.message);
+    return;
+  }
+
+  response.headers.set('Content-disposition', `attachment; filename=${body.file_name}`)
+  response.headers.set('Content-type', getContentType(body.file_path));
+
+  response.status = 200;
+  response.body = localFile;
+  return;
+
 }
 
 async function addFile(
@@ -31,8 +52,6 @@ async function addFile(
   return;
 }
 
-function updateFile() {
-}
 
 async function deleteFile(
   { request, response }: { request: any; response: any },
@@ -54,4 +73,4 @@ async function deleteFile(
   return;
 }
 
-export { getFile, addFile, updateFile, deleteFile };
+export { getFile, addFile, deleteFile };

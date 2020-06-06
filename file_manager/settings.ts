@@ -14,7 +14,6 @@ const MEDIA_TYPES: Record<string, string> = {
   ".wasm": "application/wasm",
 };
 
-// const STORAGE_PATH = "/Users/andrewmitchell/Documents/test_folder/";
-const STORAGE_PATH = "/Users/andrewmitchell/Documents/new_test_folder/";
+const STORAGE_PATH = "/Users/andrewmitchell/Documents/test_folder/";
 
 export { MEDIA_TYPES, STORAGE_PATH };

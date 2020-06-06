@@ -3,7 +3,7 @@ import {
   handleEmptyRequestBody,
   ensureDestinationDirExists,
 } from "./middleware.ts";
-import { getFile, addFile, updateFile, deleteFile } from "./controllers.ts";
+import { getFile, addFile, deleteFile } from "./controller.ts";
 
 const filesRouter = new Router();
 
@@ -13,7 +13,6 @@ filesRouter.use(ensureDestinationDirExists);
 
 filesRouter.get("/file", getFile);
 filesRouter.post("/file", addFile);
-filesRouter.put("/file", updateFile);
 filesRouter.delete("/file", deleteFile);
 
 export { filesRouter };
