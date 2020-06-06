@@ -1,67 +1,50 @@
 import {
-  getBadResponseBody,
   getGoodResponseBody,
   getFileFromRequestBody,
-  getContentType,
-  getFileNameWithType,
 } from "./services.ts";
 import { STORAGE_PATH } from "./settings.ts";
 import { File } from "./models.ts";
 
-
 async function getFile(ctx: any): Promise<any> {
   const { value : body } = await ctx.request.body();
 
+  const file: File = getFileFromRequestBody(body);
+
   ctx.response.headers.set(
     "Content-disposition",
-    `attachment; filename=${getFileNameWithType(body.file_path)}`,
+    `attachment; filename=${file.name}`,
   );
-  ctx.response.headers.set("Content-type", getContentType(body.file_path));
+  ctx.response.headers.set("Content-type", file.type);
+  ctx.response.status = 200;
+  ctx.response.body = await Deno.readFile(file.originLocation);
+
+  return;
+}
+
+async function addFile(ctx: any): Promise<any> {
+  const { value : body } = await ctx.request.body();
+
+  const file: File = getFileFromRequestBody(body);
+  const fileBuffer: Uint8Array = await Deno.readFile(file.originLocation);
+
+  await Deno.writeFile(STORAGE_PATH + file.name, fileBuffer);
+
+  ctx.response.status = 201;
+  ctx.response.body = getGoodResponseBody("ok", {});
+
+  return;
+}
+
+async function deleteFile(ctx: any): Promise<any> {
+  const { value : body } = await ctx.request.body();
+
+  const file: File = getFileFromRequestBody(body);
+
+  await Deno.remove(STORAGE_PATH + file.name);
 
   ctx.response.status = 200;
-  ctx.response.body = await Deno.readFile(body.file_path);
-  return;
-}
+  ctx.response.body = getGoodResponseBody("ok", {});
 
-async function addFile(
-  { request, response }: { request: any; response: any },
-) {
-  const { value : body } = await request.body();
-
-  const file: File = getFileFromRequestBody(body);
-
-  const fileBuffer: Uint8Array = await Deno.readFile(file.origin_location);
-
-  try {
-    await Deno.writeFile(STORAGE_PATH + file.name, fileBuffer);
-  } catch (e) {
-    response.status = 400;
-    response.body = getBadResponseBody(e.message);
-    return;
-  }
-
-  response.status = 201;
-  response.body = getGoodResponseBody("ok", {});
-  return;
-}
-
-async function deleteFile(
-  { request, response }: { request: any; response: any },
-) {
-  const { value : body } = await request.body();
-
-  const file: File = getFileFromRequestBody(body);
-
-  try {
-    await Deno.remove(STORAGE_PATH + file.name);
-  } catch (e) {
-    response.status = 400;
-    response.body = getBadResponseBody(e.message);
-    return;
-  }
-
-  response.status = 201;
-  response.body = getGoodResponseBody("ok", {});
   return;
 }
 

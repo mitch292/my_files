@@ -1,11 +1,8 @@
 export interface File {
-  short_name: string;
   name: string;
-  fileType: string;
-  origin_location: string;
+  type: string;
+  originLocation: string;
   destination_dir: string;
-  createdAt: number;
-  updatedAt: number;
 }
 
 export interface FileResponseObject {

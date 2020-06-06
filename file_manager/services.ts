@@ -4,13 +4,10 @@ import { extname } from "../deps.ts";
 
 function getFileFromRequestBody(body: any): File {
   return {
-    short_name: body.file_name,
     name: getFileNameWithType(body.file_path),
-    fileType: getContentType(body.file_path),
-    origin_location: body.file_path,
+    type: getContentType(body.file_path),
+    originLocation: body.file_path,
     destination_dir: STORAGE_PATH,
-    createdAt: Date.now(),
-    updatedAt: Date.now(),
   };
 }
 
@@ -42,6 +39,4 @@ export {
   getGoodResponseBody,
   getBadResponseBody,
   getFileFromRequestBody,
-  getContentType,
-  getFileNameWithType,
 };
